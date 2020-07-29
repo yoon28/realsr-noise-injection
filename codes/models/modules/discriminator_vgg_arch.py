@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision
+import functools
 
 class NLayerDiscriminator(nn.Module):
     """Defines a PatchGAN discriminator"""
@@ -15,10 +16,14 @@ class NLayerDiscriminator(nn.Module):
             norm_layer      -- normalization layer
         """
         super(NLayerDiscriminator, self).__init__()
-        use_bias = False
+        if type(norm_layer) == functools.partial:  # no need to use bias as BatchNorm2d has affine parameters
+            use_bias = norm_layer.func == nn.InstanceNorm2d
+        else:
+            use_bias = norm_layer == nn.InstanceNorm2d
+        # use_bias = False
         kw = 4
         padw = 1
-        sequence = [nn.Conv2d(input_nc, ndf, kernel_size=kw, stride=2, padding=padw), nn.LeakyReLU(0.2, True)]
+        sequence = [nn.Conv2d(input_nc, ndf, kernel_size=kw, stride=2, padding=padw), nn.LeakyReLU(0.2, False)]
         nf_mult = 1
         nf_mult_prev = 1
         for n in range(1, n_layers):  # gradually increase the number of filters
@@ -27,7 +32,7 @@ class NLayerDiscriminator(nn.Module):
             sequence += [
                 nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=2, padding=padw, bias=use_bias),
                 norm_layer(ndf * nf_mult),
-                nn.LeakyReLU(0.2, True)
+                nn.LeakyReLU(0.2, False)
             ]
 
         nf_mult_prev = nf_mult
@@ -35,7 +40,7 @@ class NLayerDiscriminator(nn.Module):
         sequence += [
             nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=1, padding=padw, bias=use_bias),
             norm_layer(ndf * nf_mult),
-            nn.LeakyReLU(0.2, True)
+            nn.LeakyReLU(0.2, False)
         ]
 
         sequence += [nn.Conv2d(ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)]  # output 1 channel prediction map
@@ -79,7 +84,7 @@ class Discriminator_VGG_128(nn.Module):
         self.linear2 = nn.Linear(100, 1)
 
         # activation function
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=False)
 
     def forward(self, x):
         fea = self.lrelu(self.conv0_0(x))
@@ -139,7 +144,7 @@ class Discriminator_VGG_256(nn.Module):
         self.linear2 = nn.Linear(100, 1)
 
         # activation function
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=False)
 
     def forward(self, x):
         fea = self.lrelu(self.conv0_0(x))
@@ -208,7 +213,7 @@ class Discriminator_VGG_512(nn.Module):
         self.linear2 = nn.Linear(100, 1)
 
         # activation function
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=False)
 
     def forward(self, x):
         fea = self.lrelu(self.conv0_0(x))

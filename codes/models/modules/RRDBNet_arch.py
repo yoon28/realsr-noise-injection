@@ -14,7 +14,7 @@ class ResidualDenseBlock_5C(nn.Module):
         self.conv3 = nn.Conv2d(nf + 2 * gc, gc, 3, 1, 1, bias=bias)
         self.conv4 = nn.Conv2d(nf + 3 * gc, gc, 3, 1, 1, bias=bias)
         self.conv5 = nn.Conv2d(nf + 4 * gc, nf, 3, 1, 1, bias=bias)
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=False)
 
         # initialization
         mutil.initialize_weights([self.conv1, self.conv2, self.conv3, self.conv4, self.conv5], 0.1)
@@ -58,7 +58,7 @@ class RRDBNet(nn.Module):
         self.HRconv = nn.Conv2d(nf, nf, 3, 1, 1, bias=True)
         self.conv_last = nn.Conv2d(nf, out_nc, 3, 1, 1, bias=True)
 
-        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=True)
+        self.lrelu = nn.LeakyReLU(negative_slope=0.2, inplace=False)
 
     def forward(self, x):
         fea = self.conv_first(x)

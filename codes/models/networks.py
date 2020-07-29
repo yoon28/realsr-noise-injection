@@ -81,7 +81,11 @@ def define_D(opt):
     elif which_model == 'discriminator_vgg_512':
         netD = SRGAN_arch.Discriminator_VGG_512(in_nc=opt_net['in_nc'], nf=opt_net['nf'])
     elif which_model == 'NLayerDiscriminator':
-        netD = SRGAN_arch.NLayerDiscriminator(input_nc=opt_net['in_nc'], ndf=opt_net['nf'], n_layers=opt_net['nlayer'])
+        if opt_net['norm_layer'] == 'batchnorm':
+            norm_layer = nn.BatchNorm2d
+        elif opt_net['norm_layer'] == 'instancenorm':
+            norm_layer = nn.InstanceNorm2d
+        netD = SRGAN_arch.NLayerDiscriminator(input_nc=opt_net['in_nc'], ndf=opt_net['nf'], n_layers=opt_net['nlayer'], norm_layer=norm_layer)
     else:
         raise NotImplementedError('Discriminator model [{:s}] not recognized'.format(which_model))
     return netD

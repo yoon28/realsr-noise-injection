@@ -29,6 +29,8 @@ class SRGANModel(BaseModel):
         if self.is_train:
             self.netD = networks.define_D(opt).to(self.device)
             if opt['dist']:
+                if opt['network_D']['norm_layer'] == 'batchnorm':
+                    self.netD = torch.nn.SyncBatchNorm.convert_sync_batchnorm(self.netD).to(self.device)
                 self.netD = DistributedDataParallel(self.netD,
                                                     device_ids=[torch.cuda.current_device()])
             else:
@@ -69,11 +71,11 @@ class SRGANModel(BaseModel):
                 self.cri_fea = None
             if self.cri_fea:  # load VGG perceptual loss
                 self.netF = networks.define_F(opt, use_bn=False).to(self.device)
-                if opt['dist']:
-                    self.netF = DistributedDataParallel(self.netF,
-                                                        device_ids=[torch.cuda.current_device()])
-                else:
-                    self.netF = DataParallel(self.netF)
+                # if opt['dist']:
+                #     self.netF = DistributedDataParallel(self.netF,
+                #                                         device_ids=[torch.cuda.current_device()])
+                # else:
+                #     self.netF = DataParallel(self.netF)
 
             # GD gan loss
             self.cri_gan = GANLoss(train_opt['gan_type'], 1.0, 0.0).to(self.device)

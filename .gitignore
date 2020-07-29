@@ -133,3 +133,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+.vscode/
+pretrained_model/
+results/
+yoon/kernels/
+yoon/noises/
+experiments/
+.env*
+tb_logger/
+exp_archive/
+*.zip
