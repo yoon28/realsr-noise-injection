@@ -22,7 +22,7 @@ For training, please use `train_realsr.py` codes located under `yoon` folder.
 For example:
 
 ```
-PYTHONPATH=/mnt/workspace/SR/RealSR/codes CUDA_VISIBLE_DEVICES=14,15 python3 train_realsr.py -opt yoon/options/train_df2k.yml
+PYTHONPATH=/mnt/workspace/SR/RealSR/codes CUDA_VISIBLE_DEVICES=14,15 python3 yoon/train_realsr.py -opt yoon/options/train_df2k.yml
 ```
 
 This example first registers python codes under `codes` folders to `PYTHONPATH` since I separated original codes from the codes I implemented. And it declares 2 gpus for the training procedure.
