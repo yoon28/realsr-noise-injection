@@ -29,9 +29,9 @@ This example first registers python codes under `codes` folders to `PYTHONPATH` 
 
 # Misc.
 
-First, this repo is somewhat messy because I implemented the paper for my own needs. Second, I fail to reproduce the results in the sense of SR quality. With my implementation, I saw that noises are very well removed but the sharpness of my results is not comparable to the original results.
+First, this repo is somewhat messy because I implemented the paper for my own needs. Second, I fail to reproduce the results in the sense of SR quality. With my implementation, I saw that noises are very well removed but the sharpness of my results is not as much good as the original results.
 
-In my opinion, reproducing the paper is difficult because the author did not share many of the hyper-paramter settings, such as the variance cutoff, the size of noise patch, the clean-up scale factor and so on.
+In my opinion, reproducing the paper is difficult because the author did not share many of the hyper-paramter settings, such as the variance cutoff (`max_var`), the size of noise patch (`patch_size`), the clean-up scale factor and so on.
 
 # Reference
 
